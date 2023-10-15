@@ -1,14 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Container } from "reactstrap";
 import Navbar from "./components/Navbar";
-import AllocateClassroomsScreen from "./screens/AllocateClassroomsScreen";
-import AllocateSubjectsScreen from "./screens/AllocateSubjectsScreen";
-import ClassroomScreen from "./screens/ClassroomScreen";
-import HomeScreen from "./screens/HomeScreen";
-import StudentDetails from "./screens/StudentDetails";
-import StudentScreen from "./screens/StudentScreen";
-import SubjectScreen from "./screens/SubjectScreen";
-import TeacherScreen from "./screens/TeacherScreen";
+import HomeNav from "./components/HomeNav";
+import AllocateClassroomsScreen from "./screens/AllocateClassroomsDetails";
+import AllocateSubjectsScreen from "./screens/AllocateSubjectsDetails";
+import ClassroomScreen from "./screens/ClassroomDetails";
+import StudentDetails from "./screens/StudentReport";
+import StudentScreen from "./screens/StudentDetails";
+import SubjectScreen from "./screens/SubjectDetails";
+import TeacherScreen from "./screens/TeacherDetails";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
@@ -16,6 +16,7 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar />
+      <HomeNav/>
       <ToastContainer />
       <Container>
       <Routes>

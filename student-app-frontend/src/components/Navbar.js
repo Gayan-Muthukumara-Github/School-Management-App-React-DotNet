@@ -9,6 +9,7 @@ import {
   NavLink,
   Container,
 } from 'reactstrap';
+import logoIcon from '../images/profile.png'; 
 
 function Navbar(props) {
   const [collapsed, setCollapsed] = useState(true);
@@ -17,9 +18,9 @@ function Navbar(props) {
 
   return (
     <Container>
-      <ReactstrapNavbar color="faded" light>
+      <ReactstrapNavbar color="faded" light className="bg-white">
         <NavbarBrand href="/" className="me-auto">
-          Student Management
+          <img src={logoIcon} alt="Logo" style={{ height: '30px', marginRight: '10px' }} />
         </NavbarBrand>
         <NavbarToggler onClick={toggleNavbar} className="ms-2" />
         <Collapse isOpen={!collapsed} navbar>
@@ -43,7 +44,7 @@ function Navbar(props) {
               <NavLink href="/allocate-classrooms/">Allocate Classrooms</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="/student-details/">Student Details</NavLink>
+              <NavLink href="/student-details/">Student Details Report</NavLink>
             </NavItem>
           </Nav>
         </Collapse>

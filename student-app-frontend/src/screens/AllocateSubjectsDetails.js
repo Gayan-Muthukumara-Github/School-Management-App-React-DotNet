@@ -1,4 +1,4 @@
-import axios, { all } from "axios";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
   Button,
@@ -12,21 +12,21 @@ import {
   Label,
   Table,
 } from "reactstrap";
-import constants from "../constants/constant";
+import constants from "../constants/connection";
 
-function AllocateClassroomsScreen(props) {
-  const [allocations, setAllocatios] = useState([]);
+function AllocateSubjectsScreen(props) {
+  const [allocations, setAllocations] = useState([]);
   const [teachers, setTeachers] = useState([]);
+  const [subjects, setSubjects] = useState([]);
   const [teacherID, setTeacherID] = useState("");
-  const [classrooms, setClassrooms] = useState([]);
-  const [classroomID, setClassroomID] = useState("");
+  const [subjectID, setSubjectID] = useState("");
   const [allocateTeacher, setAllocateTeacher] = useState("");
 
   const fetchData = async () => {
     const { data } = await axios.get(
-      constants.backendApi +"/Teacher_Classroom"
+      constants.backendApi +"/Teacher_Subject"
     );
-    setAllocatios(data);
+    setAllocations(data);
   };
 
   useEffect(() => {
@@ -37,12 +37,13 @@ function AllocateClassroomsScreen(props) {
       setTeachers(data);
     };
 
-    const fetchClassrooms = async () => {
-      const { data } = await axios.get(constants.backendApi +"/Classroom");
-      setClassrooms(data);
+    const fetchSubjects = async () => {
+      const { data } = await axios.get(constants.backendApi +"/Subject");
+      setSubjects(data);
     };
+
     fetchTeachers();
-    fetchClassrooms();
+    fetchSubjects();
   }, []);
 
   const handleSave = () => {
@@ -51,21 +52,19 @@ function AllocateClassroomsScreen(props) {
 
   const handleAllocate = async () => {
     const newAllocation = {
-      ClassroomID: classroomID,
-      TeacherID: teacherID
+      TeacherID: teacherID,
+      SubjectID: subjectID,
     };
     console.log(newAllocation);
     await axios.post(
-      constants.backendApi +"/Teacher_Classroom",
+      constants.backendApi +"/Teacher_Subject",
       newAllocation
     );
     fetchData();
   };
 
-  
-
-  const handleDeallocate = async (a) => {
-    await axios.delete(`${constants.backendApi}/Teacher_Classroom/${a.ID}`);
+  const handleDeallocate = async (allocation) => {
+    await axios.delete(`${constants.backendApi}/Teacher_Subject/${allocation.ID}`);
     fetchData();
   }
 
@@ -111,31 +110,28 @@ function AllocateClassroomsScreen(props) {
 
       <Card className="my-2 mx-2">
         <CardHeader className="bg-success text-white">
-          Alocated Classrooms
+          Alocated Subjects
         </CardHeader>
         <CardBody>
           <Form>
             <FormGroup row>
-              <Label for="classroom" sm={1}>
-                Classrooms
+              <Label for="subject" sm={1}>
+                Subjects
               </Label>
               <Col sm={5}>
                 <Input
-                  id="classroom"
-                  name="classroom"
+                  id="subject"
+                  name="subject"
                   type="select"
-                  values={classroomID}
-                  onChange={(e) => setClassroomID(e.target.value)}
+                  value={subjectID}
+                  onChange={(e) => setSubjectID(e.target.value)}
                 >
                   <option disabled selected value="">
-                      -- Select a Classroom --
+                      -- Select a Subject --
                     </option>
-                  {classrooms.map((classroom) => (
-                    <option
-                      key={classroom.ClassroomID}
-                      value={classroom.ClassroomID}
-                    >
-                      {classroom.ClassroomName}
+                  {subjects.map((subject) => (
+                    <option key={subject.SubjectID} value={subject.SubjectID}>
+                      {subject.SubjectName}
                     </option>
                   ))}
                 </Input>
@@ -150,14 +146,14 @@ function AllocateClassroomsScreen(props) {
           <Table striped bordered border="1">
             <thead className="bg-secondary">
               <tr>
-                <th className="text-white">Classrooms</th>
+                <th className="text-white">Subjects</th>
                 <th className="text-white">Action</th>
               </tr>
             </thead>
             <tbody>
               {allocations.map((allocation) => (
                 <tr key={allocation.ID}>
-                  <td>{allocation.ClassroomName}</td>
+                  <td>{allocation.SubjectName}</td>
                   <td>
                     <Button size="sm" onClick={() => handleDeallocate(allocation)}>Deallocate</Button>
                   </td>
@@ -171,4 +167,4 @@ function AllocateClassroomsScreen(props) {
   );
 }
 
-export default AllocateClassroomsScreen;
+export default AllocateSubjectsScreen;

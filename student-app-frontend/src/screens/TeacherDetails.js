@@ -14,53 +14,38 @@ import {
   Table,
 } from "reactstrap";
 import { toast } from "react-toastify";
-import constants from "../constants/constant";
+import constants from "../constants/connection";
 
-function StudentScreen(props) {
-  const [students, setStudents] = useState([]);
-  const [classrooms, setClassrooms] = useState([]);
+function TeacherScreen(props) {
+  const [teachers, setTeachers] = useState([]);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [contactPerson, setContactPerson] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [email, setEmail] = useState("");
-  const [dob, setDOB] = useState("");
-  const [classroomID, setClassRoomID] = useState("");
-  const [studentID, setStudentID] = useState("");
+  const [teacherID, setTeacherID] = useState("")
 
   const fetchData = async () => {
-    const { data } = await axios.get(constants.backendApi + "/Student");
-    setStudents(data);
+    const { data } = await axios.get(constants.backendApi +"/Teacher");
+    setTeachers(data);
   };
 
   useEffect(() => {
     fetchData();
-    const fetchClassrooms = async () => {
-      const { data } = await axios.get(constants.backendApi +"/Classroom");
-      setClassrooms(data);
-    };
-    fetchClassrooms();
   }, []);
 
   const emptyValues = () => {
     setFirstName("");
     setLastName("");
-    setContactPerson("");
     setContactNumber("");
     setEmail("");
-    setDOB("");
-    setClassRoomID("");
-  };
+  }
 
   const validateForm = () => {
     if (
       !firstName ||
       !lastName ||
-      !contactPerson ||
       !contactNumber ||
-      !email ||
-      !dob ||
-      !classroomID
+      !email
     ) {
       toast.warning("Please fill all the fileds");
       return false;
@@ -84,62 +69,54 @@ function StudentScreen(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!validateForm()) return;
-    const newStudent = {
+    const newTeacher = {
       FirstName: firstName,
       LastName: lastName,
-      ContactPerson: contactPerson,
       ContactNo: contactNumber,
       Email: email,
-      DOB: dob,
-      ClassroomID: classroomID,
     };
-    await axios.post(constants.backendApi +"/Student", newStudent);
+    await axios.post(constants.backendApi +"/Teacher", newTeacher);
     fetchData();
-    toast.success("Student added successfully");
+    toast.success("Teacher added successfully");
     emptyValues();
   };
 
-  const onclickRow = (tableData) => {
+    const onClickRow = (tableData) => {
     setFirstName(tableData.FirstName);
     setLastName(tableData.LastName);
-    setContactPerson(tableData.ContactPerson);
     setContactNumber(tableData.ContactNo);
     setEmail(tableData.Email);
-    setDOB(tableData.DOB);
-    setClassRoomID(tableData.ClassroomID);
-    setStudentID(tableData.StudentID);
-  };
+    setTeacherID(tableData.TeacherID);
+  }
+
 
   const handleDelete = async () => {
-    await axios.delete(`${constants.backendApi}/Student/${studentID}`);
+    await axios.delete(`${constants.backendApi}/Teacher/${teacherID}`);
     fetchData();
-    toast.error("Student deleted successfully");
+    toast.error("Teacher deleted successfully");
     emptyValues();
-  };
+  }
 
   const handleUpdate = async (event) => {
     event.preventDefault();
-    const updatedStudent = {
-      StudentID: studentID,
+    const updatedTeacher = {
+      TeacherID: teacherID,
       FirstName: firstName,
       LastName: lastName,
-      ContactPerson: contactPerson,
       ContactNo: contactNumber,
-      Email: email,
-      DOB: dob,
-      ClassroomID: classroomID,
-    };
-    await axios.put(`${constants.backendApi}/Student`, updatedStudent);
+      Email: email
+    }
+    await axios.put(constants.backendApi +'/Teacher', updatedTeacher);
     fetchData();
-    toast.info("Student updated successfully");
+    toast.info("Teacher updated successfully");
     emptyValues();
-  };
+  }
 
   return (
     <div>
       <Card className="my-2 mx-2">
         <CardHeader className="bg-success text-white">
-          Student Details
+          Teacher Details
         </CardHeader>
         <CardBody>
           <Form>
@@ -171,17 +148,6 @@ function StudentScreen(props) {
             <Row>
               <Col md={6}>
                 <FormGroup>
-                  <Label for="contactPerson">Contact Person</Label>
-                  <Input
-                    id="contactPerson"
-                    name="contactPerson"
-                    value={contactPerson}
-                    onChange={(e) => setContactPerson(e.target.value)}
-                  />
-                </FormGroup>
-              </Col>
-              <Col md={6}>
-                <FormGroup>
                   <Label for="contactNumber">Contact Number</Label>
                   <Input
                     id="contactNumber"
@@ -191,9 +157,6 @@ function StudentScreen(props) {
                   />
                 </FormGroup>
               </Col>
-            </Row>
-
-            <Row>
               <Col md={6}>
                 <FormGroup>
                   <Label for="email">Email Address</Label>
@@ -204,45 +167,6 @@ function StudentScreen(props) {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                </FormGroup>
-              </Col>
-              <Col md={6}>
-                <FormGroup>
-                  <Label for="dob">Date of Birth</Label>
-                  <Input
-                    type="date"
-                    id="dob"
-                    name="dob"
-                    value={dob}
-                    onChange={(e) => setDOB(e.target.value)}
-                  />
-                </FormGroup>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col md={6}>
-                <FormGroup>
-                  <Label for="classroom">Classroom</Label>
-                  <Input
-                    id="classroom"
-                    name="classroom"
-                    type="select"
-                    value={classroomID}
-                    onChange={(e) => setClassRoomID(e.target.value)}
-                  >
-                    <option disabled selected value="">
-                      -- Select a Classroom --
-                    </option>
-                    {classrooms.map((classroom) => (
-                      <option
-                        key={classroom.ClassroomID}
-                        value={classroom.ClassroomID}
-                      >
-                        {classroom.ClassroomName}
-                      </option>
-                    ))}
-                  </Input>
                 </FormGroup>
               </Col>
             </Row>
@@ -271,7 +195,7 @@ function StudentScreen(props) {
 
       <Card className="my-5 mx-2">
         <CardHeader className="bg-success text-white">
-          Existing Students
+          Existing Teachers
         </CardHeader>
         <CardBody>
           <Table striped bordered={false} border="1">
@@ -279,17 +203,17 @@ function StudentScreen(props) {
               <tr>
                 <th className="text-white">First Name</th>
                 <th className="text-white">Last Name</th>
-                <th className="text-white">Contact Person</th>
                 <th className="text-white">Contact No.</th>
+                <th className="text-white">Email Address</th>
               </tr>
             </thead>
             <tbody>
-              {students.map((student) => (
-                <tr key={student.StudentID} onClick={() => onclickRow(student)}>
-                  <td>{student.FirstName}</td>
-                  <td>{student.LastName}</td>
-                  <td>{student.ContactPerson}</td>
-                  <td>{student.ContactNo}</td>
+              {teachers.map((teacher) => (
+                <tr key={teacher.TeacherID} onClick={() => onClickRow(teacher)}>
+                  <td>{teacher.FirstName}</td>
+                  <td>{teacher.LastName}</td>
+                  <td>{teacher.ContactNo}</td>
+                  <td>{teacher.Email}</td>
                 </tr>
               ))}
             </tbody>
@@ -300,4 +224,4 @@ function StudentScreen(props) {
   );
 }
 
-export default StudentScreen;
+export default TeacherScreen;

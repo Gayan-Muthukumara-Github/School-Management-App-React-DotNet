@@ -16,6 +16,7 @@
     "reactstrap": "^9.1.6",
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
+    "solid-js": "^1.8.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

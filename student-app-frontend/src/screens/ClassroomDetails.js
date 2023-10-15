@@ -14,7 +14,7 @@ import {
   Table,
 } from "reactstrap";
 import { toast } from "react-toastify";
-import constants from "../constants/constant";
+import constants from "../constants/connection";
 
 function ClassroomScreen(props) {
   const [classrooms, setClassrooms] = useState([]);
